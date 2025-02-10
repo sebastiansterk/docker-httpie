@@ -1,10 +1,12 @@
-FROM alpine:latest
+FROM alpine:3.18
 
-MAINTAINER Sebastian Sterk <sebastian@wiuwiu.de>
+RUN apk add --no-cache python3 py3-pip && \
+    pip3 install --no-cache-dir --upgrade pip setuptools httpie
 
-RUN apk --update add --no-cache python3
-RUN pip3 install --upgrade pip setuptools httpie
-RUN rm -r /root/.cache
+RUN addgroup -S httpie && adduser -S httpie -G httpie
+USER httpie
+
+WORKDIR /home/httpie
 
 ENTRYPOINT [ "http" ]
 CMD ["--help"]
